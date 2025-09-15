@@ -1,5 +1,31 @@
-# University-reg-program
-I will create univ reg program i will use or the knoweledge that i get in algorithm and data structure 
-firstly i will create a program with no datastructure i will basically get the name and the age from the user and put it in a file
-i will read from the file and apply on it differnet functions
-the id is related to people number and also their order it will increase if i add user and decrease if i delete it
+✨ Features
+
+✅ Add new students with ID auto-increment.
+
+✅ Display all students.
+
+✅ Search students by name and age.
+
+✅ Delete students by ID.
+
+✅ Add or update notes (with two fields: asd1 and asd2).
+
+✅ File handling with persistent storage (students.txt).
+
+🆚 Difference from First Version
+
+First version only stored:
+
+id, name, age
+
+Second version now also stores:
+
+note (true/false)
+
+asd1, asd2 (extra numeric fields for notes)
+
+Added add/update note functionality.
+
+Improved delete logic and file handling.
+
+Slightly cleaner menu loop.
