@@ -3,37 +3,52 @@ using namespace std;
 #include <iostream>
 #include <fstream>
 #include <string>
-int getid(){
-    ifstream file("students.txt");
-    if(file.is_open()) {
-        int id , age;
-        string name;
-        while(file>>id>>name>>age)
-        {
-            id=id;
-        }
-        file.close();
-        return id;
-    } else {
-        cout << "Unable to open file.\n" << endl;
-        return 0;
+using namespace std;
 
+bool isFileEmpty(const string& filename) {
+    ifstream file(filename);
+    return file.peek() == ifstream::traits_type::eof();
+}
+   
+int getid(){
+      ifstream file("students.txt"); // open file for reading
+
+    if (!file.is_open()) {
+       
+        cout << "Error opening file!" << endl;
+        return 0;
     }
+    if(isFileEmpty("students.txt"))
+    {
+        return 0;
+    }
+
+ 
+int id;
+string name;
+int age;
+bool note;
+int asd1,asd2;
+    while (file >> id >> name >> age>> note >>asd1>>asd2) { id=id;}
+       
+    
+    file.close();
+    return id;
 }
 void addStudent(int *id) {
-    string name;int age;
+    string name;int age;bool note = false;
+
   printf("Enter student name: ");
   cin >> name;
     printf("Enter student age: ");
   cin >> age;
-  int k=*id;
-  k++;
-  *id=k;
+ *id = *id + 1;  // Increment ID for the new student
+    cout << "Adding a new student...\n" << endl;
   // Store student details (name, age, id) in your data structure here
     cout << "Student added with ID: " << *id << endl;
 ofstream file("students.txt", ios::app);
     if (file.is_open()) {
-        file << *id << " " << name << " " << age << endl;
+        file << *id << " " << name << " " << age << " "<<note<<" "<<0<<" "<<0<< endl;
         file.close();
         cout << "Student details saved to file.\n" << endl;
     } else {
@@ -48,8 +63,10 @@ void showAllStudents() {
     if(file.is_open()) {
         int id , age;
         string name;
-        while(file>>id>>name>>age)
-        cout<<"id : "<<id<<"\t"<<"name"" : "<<name<<"\t" << "age:"<< age<<endl;
+        bool note;
+        int asd1,asd2;
+        while(file >> id >> name >> age>> note >>asd1>>asd2)
+       { cout<<"id : "<<id<<"\t"<<"name"" : "<<name<<"\t" << "age:"<< age<<endl;}
         file.close();
     } else {
         cout << "Unable to open file.\n" << endl;
@@ -69,7 +86,9 @@ void searchStudent() {
         int id , age;
         string name;
         bool found = false;
-        while(file>>id>>name>>age) {
+        bool note;
+        int asd1,asd2;
+        while(file >> id >> name >> age>> note >>asd1>>asd2) {
             if(name == name2 && age == age2) {
                 cout << "Student found: ID: " << id << ", Name: " << name << ", Age: " << age << endl;
                 found = true;
@@ -85,9 +104,11 @@ void searchStudent() {
     }
 
 }
-void deleteStudent(int id2) {
+void deleteStudent() {
     // Implement logic to delete a student
-
+    int id2;
+  printf("enter id to delete\n");
+            cin>>id2;
    
     cout << "Deleting a student...\n" << endl;
 ofstream file("temp.txt");
@@ -96,13 +117,15 @@ if(file2.is_open())
   {
    
 int id,age;string name;
+bool note;
 int ind=0;
-while(file2>>id>>name>>age)
+int asd1,asd2;
+while(file2 >> id >> name >> age>> note >>asd1>>asd2)
 {  
 if(id==id2)
-continue;
+{continue;}
 ind ++; 
-file<<ind<<" "<<name<<" "<<age<<endl;
+file << id << " " << name << " " << age << " "<<note<<" "<<asd1<<" "<<asd2<< endl;
 
 }
 
@@ -110,6 +133,7 @@ file2.close();
 file.close();
 remove("students.txt");
 rename("temp.txt","students.txt");
+cout<<"student deleted\n"<<endl;
 if(ind==0)
  {
 remove("students.txt");
@@ -119,44 +143,122 @@ cout<<"no students left\n"<<endl;
 else{cout<<"Unable to open file\n"<<endl;}
 
 }
+void addOrUpdateNote() {
+    // Implement logic to add or update a student's note
+    bool f=false;
+        fstream file("students.txt", ios::in | ios::out | ios::app);
+        
+    if (!file.is_open()) {
+        cout << "Unable to open file.\n" << endl;   
+        return;
+    }
+    if (isFileEmpty("students.txt"))
+    {
+        /* code */
+        cout<<"no students to add note for\n"<<endl;
+        return;
+    }
+            ofstream tempFile("temp.txt");
 
+int id;
+string name;
+int age;
+bool note;
+int asd1,asd2;
+
+while (file >> id >> name >> age>> note >>asd1>>asd2)
+{
+    cout<<"do you want to add note for student with name"<<name<<" (1 for yes, 0 for no): ";
+    int choice;
+    cin>>choice;
+
+    if(choice==1)
+    {
+        f=true;
+        int asd1,asd2;
+        note=true;
+        cout<<"enter note asd1: ";
+        cin>>asd1;
+        cout<<"enter note asd2: ";
+        cin>>asd2;
+        tempFile << id << " " << name << " " << age << " "<<note<<" "<<asd1<<" "<<asd2<< endl;
+    }
+    else if(choice==0 && f==true)
+    {
+        note=false;
+        asd1=0;
+        asd2=0;
+        tempFile << id << " " << name << " " << age << " "<<note<<" "<<asd1<<" "<<asd2 <<endl;
+    }
+
+    else
+    {
+        note=false;
+    }
+
+}
+
+file.close();
+tempFile.close();
+if (f==true)
+{
+    remove("students.txt");
+    rename("temp.txt", "students.txt");
+}
+if (f==false)
+{
+    /* code */
+    remove("temp.txt");
+    cout<<"no notes added\n"<<endl;
+}
+
+
+
+
+}
 
 
 int main() {
-    while(true){
+   
     int id=getid();
     printf("there are %d students\n",id);
     cout << "Hello, !\n" << endl;
         cout << "1- ADD STUDENT\n" << endl;
     cout << "2- Show all\n" << endl;
 
-    cout << "3-Search\n" << endl;
+    cout << "3- gSearch\n" << endl;
     cout << "4-Delete  !\n" << endl;
+    cout << "5-add or udpate note !\n" << endl;
+    cout << "Enter your choice (1-5): ";
 int choice;
     cin >> choice;
     switch (choice) {
         case 1:
-            addStudent(&id);
-            break;
+         {  addStudent(&id);
+            break;}
         case 2:
-        
+        {
             showAllStudents();
-            break;
+            break;}
         case 3:
-           
+        {
             searchStudent();
-            break;
+            break;}
         case 4:
-        int id2;
-            printf("enter id to delete\n");
-            cin>>id2;
-            deleteStudent(id2);
-            break;
+      {
+          
+            deleteStudent();
+            break;}
+            case 5:
+            {
+               addOrUpdateNote()    ;
+                break;
+            }
         default:
             cout << "Invalid choice. Please try again.\n" << endl;
             break;
     }
+
+    
     return 0;
-    }
-   
 }
